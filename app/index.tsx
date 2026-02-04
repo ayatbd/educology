@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { useRouter } from "expo-router"; // 1. Import useRouter
 import React, { useState } from "react";
 import {
   Image,
@@ -9,17 +9,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-// Using lucide icons for the logo fallback, but you can replace with your PNG
-// import { BookOpen } from "lucide-react-native";
 
-// Mock Data for the Roles
+// Mock Data
 const ROLES = [
   {
     id: "student",
     title: "I'm a Student",
     subtitle: "Sign in / Sign up as a Student",
-    link: "/student",
-    // Using placeholder avatars that look similar to the illustration style
     image:
       "https://img.freepik.com/free-vector/student-with-laptop-studying_23-2148509899.jpg?w=150",
   },
@@ -27,7 +23,6 @@ const ROLES = [
     id: "parent",
     title: "I'm a Parent",
     subtitle: "Sign in / Sign up as a Parent",
-    link: "/parent",
     image:
       "https://img.freepik.com/free-vector/family-couple-with-kids_23-2148529524.jpg?w=150",
   },
@@ -35,7 +30,6 @@ const ROLES = [
     id: "teacher",
     title: "I'm a Teacher",
     subtitle: "Sign in / Sign up as a Teacher",
-    link: "/teacher",
     image:
       "https://img.freepik.com/free-vector/teacher-standing-near-blackboard_23-2148040407.jpg?w=150",
   },
@@ -43,13 +37,24 @@ const ROLES = [
     id: "assistant",
     title: "I'm an Assistant",
     subtitle: "Sign in / Sign up as an Assistant",
-    link: "/assistant",
     image:
       "https://img.freepik.com/free-vector/business-woman-working-laptop_23-2148512143.jpg?w=150",
   },
 ];
+
 export default function Index() {
+  const router = useRouter(); // 2. Initialize the router
   const [selectedRole, setSelectedRole] = useState("teacher");
+
+  // 3. Handle Navigation on Next Press
+  const handleNext = () => {
+    // You can pass the role as a parameter if needed
+    router.push({
+      pathname: "/register",
+      params: { role: selectedRole },
+    });
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
@@ -64,6 +69,7 @@ export default function Index() {
           <Image
             source={require("../assets/images/home/logo.png")}
             className="w-[226px] h-48"
+            resizeMode="contain" // Added resizeMode for better logo fit
           />
         </View>
 
@@ -92,41 +98,37 @@ export default function Index() {
             const isSelected = selectedRole === role.id;
 
             return (
+              // 4. REMOVED <Link> wrapper here. Just use TouchableOpacity.
               <TouchableOpacity
                 key={role.id}
                 onPress={() => setSelectedRole(role.id)}
                 activeOpacity={0.8}
-                // Conditional Styling for Selected State
                 className={`flex-row items-center p-3 rounded-2xl border-2 overflow-hidden ${
                   isSelected
-                    ? "bg-[#F0F9F6] border-[#7CBFA5]" // Greenish bg & border if selected
-                    : "bg-gray-50 border-transparent" // Gray bg if not
+                    ? "bg-[#F0F9F6] border-[#7CBFA5]"
+                    : "bg-gray-50 border-transparent"
                 }`}
               >
-                <Link href={role.link}>
-                  {/* Role Image */}
-                  <View className="w-16 h-16 rounded-xl overflow-hidden mr-4 bg-gray-200">
-                    <Image
-                      source={{ uri: role.image }}
-                      className="w-full h-full"
-                      resizeMode="cover"
-                    />
-                  </View>
+                {/* Role Image */}
+                <View className="w-16 h-16 rounded-xl overflow-hidden mr-4 bg-gray-200">
+                  <Image
+                    source={{ uri: role.image }}
+                    className="w-full h-full"
+                    resizeMode="cover"
+                  />
+                </View>
 
-                  {/* Text Content */}
-                  <View className="flex-1">
-                    <Text
-                      className={`text-lg font-bold mb-1 ${
-                        isSelected ? "text-[#4A8B71]" : "text-[#569C7D]"
-                      }`}
-                    >
-                      {role.title}
-                    </Text>
-                    <Text className="text-gray-500 text-xs">
-                      {role.subtitle}
-                    </Text>
-                  </View>
-                </Link>
+                {/* Text Content */}
+                <View className="flex-1">
+                  <Text
+                    className={`text-lg font-bold mb-1 ${
+                      isSelected ? "text-[#4A8B71]" : "text-[#569C7D]"
+                    }`}
+                  >
+                    {role.title}
+                  </Text>
+                  <Text className="text-gray-500 text-xs">{role.subtitle}</Text>
+                </View>
               </TouchableOpacity>
             );
           })}
@@ -134,6 +136,7 @@ export default function Index() {
 
         {/* --- Next Button --- */}
         <TouchableOpacity
+          onPress={handleNext} // 5. Added navigation handler here
           className="mt-10 bg-[#C59D5F] py-4 rounded-3xl items-center shadow-lg shadow-orange-100"
           activeOpacity={0.9}
         >
