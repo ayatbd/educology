@@ -78,7 +78,7 @@ export default function VerifyEmailScreen() {
       <StatusBar barStyle="dark-content" />
 
       {/* --- Header / Back Button --- */}
-      <View className="px-6 pt-14">
+      <View className="px-6 pt-10">
         <TouchableOpacity
           onPress={() => router.back()} // Or navigation.goBack()
           className="w-10 h-10 justify-center"
@@ -161,7 +161,7 @@ export default function VerifyEmailScreen() {
           <TouchableOpacity
             className="w-full bg-[#C59D5F] rounded-full h-14 items-center justify-center shadow-lg shadow-orange-900/20 mb-8"
             activeOpacity={0.8}
-            onPress={() => console.log("OTP Submitted:", otp.join(""))}
+            onPress={() => (router.push("/reset-password"), console.log(otp))}
           >
             <Text className="text-white text-xl font-bold">Confirm Code</Text>
           </TouchableOpacity>

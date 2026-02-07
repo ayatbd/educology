@@ -77,7 +77,7 @@ export default function SignInScreen() {
               <TouchableOpacity
                 className="w-full bg-[#C59D5F] rounded-full h-14 items-center justify-center mt-6 shadow-lg shadow-orange-900/20"
                 activeOpacity={0.8}
-                onPress={() => console.log("Sign In Pressed")}
+                onPress={() => router.push("/verify-email")}
               >
                 <Text className="text-white text-xl font-bold">
                   Get Verification Code
