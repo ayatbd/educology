@@ -1,20 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import authReducer, { apiSlice } from './api/apiSlice';
-
-import authTest from './features/auth/authSliceTest';
+import authReducer from './features/auth/authSlice';
+import { apiSlice } from './api/apiSlice';
 
 // 1. Import Persist logic
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+    persistStore,
+    persistReducer,
     FLUSH,
+    REHYDRATE,
     PAUSE,
     PERSIST,
-    persistReducer,
-    persistStore,
     PURGE,
     REGISTER,
-    REHYDRATE,
 } from 'redux-persist';
 
 // 2. Configure Persistence
@@ -29,7 +28,6 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
     reducer: {
         auth: persistedAuthReducer, // Use the persisted reducer
-        authTest,
         [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>

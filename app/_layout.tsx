@@ -1,30 +1,35 @@
 import { Stack } from "expo-router";
 import "./global.css";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react"; // Import this
-import { store, persistor } from "./path/to/store"; // Import store and persistor
-import MainNavigation from "./navigation"; // Your existing navigation
+import { persistor, store } from "@/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(auth)/reset-password"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="(auth)/forget-password"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="(auth)/verify-email"
-          options={{ headerShown: false }}
-        />
-      </Stack>
+      {/* Wait for storage to load before rendering the app */}
+      <PersistGate loading={null} persistor={persistor}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(auth)/register"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(auth)/reset-password"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(auth)/forget-password"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(auth)/verify-email"
+            options={{ headerShown: false }}
+          />
+        </Stack>
+      </PersistGate>
     </Provider>
   );
 }

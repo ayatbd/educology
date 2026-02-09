@@ -12,21 +12,54 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 
+// 1. Import the mutation hook
+// Make sure this path points to your actual authApi file location
+import { useLoginMutation } from "../../redux/api/authApi";
+
 export default function SignInScreen() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleNext = () => {
-    // You can pass the role as a parameter if needed
-    router.push({
-      pathname: "/forget-password",
-    });
+  // 2. Initialize the login mutation
+  const [login, { isLoading }] = useLoginMutation();
+
+  const handleForgotPassword = () => {
+    router.push("/forget-password");
   };
+
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      Alert.alert("Missing Fields", "Please enter both email and password.");
+      return;
+    }
+
+    try {
+      // 3. Call the API
+      // .unwrap() allows us to catch the error in the catch block easily
+      const response = await login({ email, password }).unwrap();
+
+      console.log("Login Successful:", response);
+
+      // 4. Navigate to your main app screen
+      // Use 'replace' so they can't go back to login by pressing back
+      router.replace("/"); // Change this to your actual dashboard route, e.g., '/home'
+    } catch (err: any) {
+      console.error("Login Failed:", err);
+      // Extract error message from backend response if available
+      const errorMessage =
+        err?.data?.message || "Invalid credentials or server error";
+      Alert.alert("Login Failed", errorMessage);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -45,9 +78,10 @@ export default function SignInScreen() {
             <Image
               source={require("../../assets/images/home/logo.png")}
               className="w-[226px] h-48"
-              resizeMode="contain" // Added resizeMode for better logo fit
+              resizeMode="contain"
             />
           </View>
+
           {/* Wrapper View */}
           <View className="w-full">
             {/* --- Header --- */}
@@ -75,6 +109,9 @@ export default function SignInScreen() {
                   placeholderTextColor="#9CA3AF"
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  // Bind state
+                  value={email}
+                  onChangeText={setEmail}
                   className="bg-gray-100 rounded-2xl h-14 px-5 text-black text-base"
                 />
               </View>
@@ -88,6 +125,7 @@ export default function SignInScreen() {
                   <TextInput
                     placeholder="Enter your Password"
                     placeholderTextColor="#9CA3AF"
+                    // Bind state
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
@@ -108,7 +146,7 @@ export default function SignInScreen() {
                 {/* Forget Password Link */}
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={handleNext}
+                  onPress={handleForgotPassword}
                   className="items-end mt-3"
                 >
                   <Text className="text-gray-400 text-sm">
@@ -119,11 +157,18 @@ export default function SignInScreen() {
 
               {/* --- Sign In Button --- */}
               <TouchableOpacity
-                className="w-full bg-[#C59D5F] rounded-full h-14 items-center justify-center mt-6 shadow-lg shadow-orange-900/20"
+                className={`w-full rounded-full h-14 items-center justify-center mt-6 shadow-lg shadow-orange-900/20 ${
+                  isLoading ? "bg-[#C59D5F]/70" : "bg-[#C59D5F]"
+                }`}
                 activeOpacity={0.8}
-                onPress={() => console.log("Sign In Pressed")}
+                onPress={handleSignIn}
+                disabled={isLoading} // Prevent double clicks
               >
-                <Text className="text-white text-xl font-bold">Sign In</Text>
+                {isLoading ? (
+                  <ActivityIndicator color="#FFF" />
+                ) : (
+                  <Text className="text-white text-xl font-bold">Sign In</Text>
+                )}
               </TouchableOpacity>
 
               {/* --- Footer Link --- */}

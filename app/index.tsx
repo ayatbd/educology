@@ -1,6 +1,10 @@
+import { logout } from "@/redux/features/auth/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router"; // 1. Import useRouter
+import { LogOut } from "lucide-react-native";
 import React, { useState } from "react";
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -9,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
 // Mock Data
 const ROLES = [
@@ -45,6 +50,7 @@ const ROLES = [
 export default function Index() {
   const router = useRouter(); // 2. Initialize the router
   const [selectedRole, setSelectedRole] = useState("teacher");
+  const dispatch = useDispatch();
 
   // 3. Handle Navigation on Next Press
   const handleNext = () => {
@@ -55,9 +61,41 @@ export default function Index() {
     });
   };
 
+  const handleLogout = async () => {
+    Alert.alert("Log Out", "Are you sure you want to log out?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Log Out",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            // 1. Clear Data from Storage
+            await AsyncStorage.removeItem("userToken"); // Change key to match yours
+
+            // 2. Reset Redux State
+            dispatch(logout());
+
+            // 3. Navigate to Login (use 'replace' to prevent going back)
+            router.replace("/login");
+          } catch (error) {
+            console.error("Logout failed", error);
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
+
+      <TouchableOpacity
+        onPress={handleLogout}
+        className="flex-row items-center justify-center mt-10 bg-red-50 p-4 rounded-2xl border border-red-100"
+      >
+        <LogOut size={20} color="#EF4444" style={{ marginRight: 10 }} />
+        <Text className="text-red-500 font-bold text-lg">Log Out</Text>
+      </TouchableOpacity>
 
       <ScrollView
         className="flex-1 px-6"
