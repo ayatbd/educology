@@ -91,7 +91,7 @@ export default function Index() {
 
       <TouchableOpacity
         onPress={handleLogout}
-        className="flex-row items-center justify-center mt-10 bg-red-50 p-4 rounded-2xl border border-red-100"
+        className="flex-row items-center justify-center w-48 mt-14 bg-red-50 p-4 rounded-2xl border border-red-100"
       >
         <LogOut size={20} color="#EF4444" style={{ marginRight: 10 }} />
         <Text className="text-red-500 font-bold text-lg">Log Out</Text>

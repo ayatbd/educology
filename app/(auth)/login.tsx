@@ -47,7 +47,7 @@ export default function SignInScreen() {
 
       // 4. Navigate to your main app screen
       // Use 'replace' so they can't go back to login by pressing back
-      router.replace("/"); // Change this to your actual dashboard route, e.g., '/home'
+      router.replace("/homepage"); // Change this to your actual dashboard route, e.g., '/home'
     } catch (err: any) {
       console.error("Login Failed:", err);
       // Extract error message from backend response if available

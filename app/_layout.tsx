@@ -11,6 +11,7 @@ export default function RootLayout() {
       <PersistGate loading={null} persistor={persistor}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="homepage" options={{ headerShown: false }} />
           <Stack.Screen
             name="(auth)/register"
             options={{ headerShown: false }}
