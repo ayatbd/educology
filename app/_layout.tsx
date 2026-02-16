@@ -29,6 +29,11 @@ export default function RootLayout() {
             name="(auth)/verify-email"
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name="homeDetails/[id]"
+            options={{ headerShown: false }}
+          />
         </Stack>
       </PersistGate>
     </Provider>

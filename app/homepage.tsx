@@ -1,15 +1,24 @@
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import { Bell } from "lucide-react-native";
 import React from "react";
 import {
-  View,
-  Text,
-  ScrollView,
   Image,
+  ScrollView,
   StatusBar,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Bell } from "lucide-react-native";
-import { LinearGradient } from "expo-linear-gradient";
+
+type CourseCardDetails = {
+  id: number;
+  title: string;
+  subject: string;
+  students: number;
+  image: string;
+};
 
 const HomePage = () => {
   return (
@@ -88,7 +97,7 @@ const HomePage = () => {
         </View>
 
         {/* Course List Header */}
-        <View className="mt-6 mb-2">
+        <View className="mt-6 mb-6">
           <Text className="text-slate-800 text-lg font-bold">
             My Assign Courses
           </Text>
@@ -106,43 +115,54 @@ const HomePage = () => {
 };
 
 // Reusable Course Card Component
-const CourseCard = ({ data }) => {
+const CourseCard = ({ data }: { data: CourseCardDetails }) => {
+  const handlePress = () => {
+    router.push({
+      pathname: "/homeDetails/[id]",
+      params: { id: data.id },
+    });
+  };
   return (
-    <View className="bg-white rounded-2xl p-3 flex-row shadow-sm border border-gray-100">
-      <Image
-        source={{ uri: data.image }}
-        className="w-24 h-24 rounded-xl bg-gray-200"
-        resizeMode="cover"
-      />
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+      <View className="bg-white rounded-2xl p-1.5 flex-row shadow-sm border border-gray-100">
+        <Image
+          source={{ uri: data.image }}
+          className="w-24 h-24 rounded-xl bg-gray-200"
+          resizeMode="cover"
+        />
 
-      <View className="ml-3 flex-1 justify-between py-1">
-        <View>
-          <Text
-            className="text-slate-800 font-bold text-base"
-            numberOfLines={1}
-          >
-            {data.title}
-          </Text>
-          <Text className="text-gray-500 text-xs mt-1">{data.subject}</Text>
-        </View>
-
-        <View className="flex-row items-center mt-2">
-          <View className="bg-cyan-50 px-3 py-1 rounded-full">
-            <Text className="text-cyan-600 text-[10px] font-bold">Active</Text>
+        <View className="ml-3 flex-1 justify-between">
+          <View>
+            <Text
+              className="text-slate-800 font-bold text-sm"
+              numberOfLines={1}
+            >
+              {data.title}
+            </Text>
+            <Text className="text-gray-500 text-xs mt-1">{data.subject}</Text>
           </View>
-        </View>
 
-        <Text className="text-gray-400 text-[10px] mt-2">
-          Total Enrolled Student : {data.students}
-        </Text>
+          <View className="flex-row items-center mt-2">
+            <View className="bg-cyan-50 px-3 py-1 rounded-full">
+              <Text className="text-cyan-600 text-[10px] font-bold">
+                Active
+              </Text>
+            </View>
+          </View>
+
+          <Text className="text-gray-400 text-[10px] mt-2">
+            Total Enrolled Student : {data.students}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 // Dummy Data
 const coursesData = [
   {
+    id: 1,
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
@@ -150,6 +170,7 @@ const coursesData = [
       "https://img.freepik.com/free-photo/kids-learning-school_23-2148858206.jpg",
   },
   {
+    id: 2,
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
@@ -157,6 +178,7 @@ const coursesData = [
       "https://img.freepik.com/free-vector/math-background-with-realistic-elements_1361-1279.jpg",
   },
   {
+    id: 3,
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
@@ -164,6 +186,7 @@ const coursesData = [
       "https://img.freepik.com/free-photo/calculator-with-finance-concept-table_23-2149126209.jpg",
   },
   {
+    id: 4,
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
