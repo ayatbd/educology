@@ -6,7 +6,7 @@ interface AuthState {
     user: any | null;
     accessToken: string | null;
     refreshToken: string | null;
-    fcmToken: string | null; // <-- Add this
+    fcmToken: string | null;
     isAuthenticated: boolean;
 }
 
@@ -14,7 +14,7 @@ const initialState: AuthState = {
     user: null,
     accessToken: null,
     refreshToken: null,
-    fcmToken: null, // <-- Initialize
+    fcmToken: null,
     isAuthenticated: false,
 };
 const authSlice = createSlice({

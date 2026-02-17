@@ -22,6 +22,13 @@ export const authApi = apiSlice.injectEndpoints({
                 }
             },
         }),
+        register: builder.mutation({
+            query: (credentials) => ({
+                url: '/auth/register',
+                method: 'POST',
+                body: credentials,
+            }),
+        }),
         forgotPassword: builder.mutation({
             query: (data) => ({
                 url: '/auth/forgotPass',
@@ -48,6 +55,7 @@ export const authApi = apiSlice.injectEndpoints({
 
 export const {
     useLoginMutation,
+    useRegisterMutation,
     useForgotPasswordMutation,
     useVerifyOtpMutation,
     useResetPasswordMutation

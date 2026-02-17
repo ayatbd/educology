@@ -1,6 +1,6 @@
 import { logout } from "@/redux/features/auth/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router"; // 1. Import useRouter
+import { useRouter } from "expo-router";
 import { LogOut } from "lucide-react-native";
 import React, { useState } from "react";
 import {
@@ -69,13 +69,9 @@ export default function Index() {
         style: "destructive",
         onPress: async () => {
           try {
-            // 1. Clear Data from Storage
-            await AsyncStorage.removeItem("userToken"); // Change key to match yours
-
-            // 2. Reset Redux State
+            await AsyncStorage.removeItem("userToken");
+            // await messaging().deleteToken();
             dispatch(logout());
-
-            // 3. Navigate to Login (use 'replace' to prevent going back)
             router.replace("/login");
           } catch (error) {
             console.error("Logout failed", error);

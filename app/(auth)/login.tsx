@@ -39,18 +39,13 @@ export default function SignInScreen() {
     }
 
     try {
-      // 3. Call the API
-      // .unwrap() allows us to catch the error in the catch block easily
-      const response = await login({ email, password }).unwrap();
+      const fcmToken = "adfsadfsdfsadfsdf";
+      const response = await login({ email, password, fcmToken }).unwrap();
 
       console.log("Login Successful:", response);
-
-      // 4. Navigate to your main app screen
-      // Use 'replace' so they can't go back to login by pressing back
-      router.replace("/homepage"); // Change this to your actual dashboard route, e.g., '/home'
+      router.replace("/homepage");
     } catch (err: any) {
       console.error("Login Failed:", err);
-      // Extract error message from backend response if available
       const errorMessage =
         err?.data?.message || "Invalid credentials or server error";
       Alert.alert("Login Failed", errorMessage);
