@@ -16,7 +16,7 @@ interface ApiResponse {
 const baseQuery = fetchBaseQuery({
     // Note: On Android Emulator, use '10.0.2.2' instead of 'localhost' if testing locally.
     // Since you have a real IP, this should work fine.
-    baseUrl: 'http://15.223.245.199/api/v1',
+    baseUrl: 'http://10.10.20.34:5000/api/v1',
     prepareHeaders: (headers, { getState }) => {
         const state = getState() as RootState;
         // 1. Read directly from Redux state (Redux Persist handles the storage retrieval)

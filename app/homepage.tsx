@@ -118,7 +118,7 @@ const HomePage = () => {
 const CourseCard = ({ data }: { data: CourseCardDetails }) => {
   const handlePress = () => {
     router.push({
-      pathname: "/homeDetails/[id]",
+      pathname: "/class-details/[id]",
       params: { id: data.id },
     });
   };

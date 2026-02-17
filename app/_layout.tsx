@@ -31,7 +31,7 @@ export default function RootLayout() {
           />
 
           <Stack.Screen
-            name="homeDetails/[id]"
+            name="class-details/[id]"
             options={{ headerShown: false }}
           />
         </Stack>

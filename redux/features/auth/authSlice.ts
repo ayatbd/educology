@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
 
+// Inside authSlice.ts
 interface AuthState {
-    user: any | null; // You can replace 'any' with your User interface
+    user: any | null;
     accessToken: string | null;
     refreshToken: string | null;
+    fcmToken: string | null; // <-- Add this
     isAuthenticated: boolean;
 }
 
@@ -12,15 +14,15 @@ const initialState: AuthState = {
     user: null,
     accessToken: null,
     refreshToken: null,
+    fcmToken: null, // <-- Initialize
     isAuthenticated: false,
 };
-
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setCredentials: (state, action: PayloadAction<{ accessToken: string; refreshToken?: string }>) => {
-            const { accessToken, refreshToken } = action.payload;
+        setCredentials: (state, action: PayloadAction<{ accessToken: string; refreshToken?: string; fcmToken?: string }>) => {
+            const { accessToken, refreshToken, fcmToken } = action.payload;
 
             // 1. Update State
             state.accessToken = accessToken;
@@ -29,6 +31,8 @@ const authSlice = createSlice({
             if (refreshToken) {
                 state.refreshToken = refreshToken;
             }
+
+            if (fcmToken) state.fcmToken = fcmToken; // <-- Store it
 
             // 2. Decode Token
             if (accessToken) {
