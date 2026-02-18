@@ -26,7 +26,6 @@ const authSlice = createSlice({
 
             // 1. Update State
             state.accessToken = accessToken;
-
             // We store refreshToken in Redux state now, so Redux Persist can save it too
             if (refreshToken) {
                 state.refreshToken = refreshToken;
@@ -44,8 +43,6 @@ const authSlice = createSlice({
                     state.user = null;
                 }
             }
-
-            // REMOVED: localStorage.setItem(...) 
             // Reason: Redux Persist automatically saves this state change to AsyncStorage
         },
         logout: (state) => {
@@ -53,8 +50,6 @@ const authSlice = createSlice({
             state.accessToken = null;
             state.refreshToken = null;
             state.isAuthenticated = false;
-
-            // REMOVED: localStorage.removeItem(...)
             // Reason: Redux Persist will detect these nulls and update AsyncStorage automatically
         },
     },

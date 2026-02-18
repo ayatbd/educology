@@ -91,13 +91,16 @@ export default function SignUpScreen() {
           Platform.OS === "ios" ? image.uri.replace("file://", "") : image.uri,
         name: `photo.${fileType}`,
         type: `image/${fileType}`,
-      });
+      } as any);
     }
 
     try {
       const response = await registerUser(submitData).unwrap();
       Alert.alert("Success", "Account created successfully!");
-      router.push("/verify-email");
+      router.push({
+        pathname: "/verify-email",
+        params: { email: formData.email },
+      });
     } catch (error) {
       const errorMessage =
         (error &&
