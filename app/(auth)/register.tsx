@@ -65,20 +65,22 @@ export default function SignUpScreen() {
 
     const submitData = new FormData();
 
-    const fcmToken = "dummy_fcm_token";
+    const fcmToken = "kdbcbfdfkjcdhskljoid";
     const role = "student";
 
     const dataBody = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
-      phone: formData.phone,
+      contact: formData.phone,
       password: formData.password,
       fcmToken,
       role,
     };
 
-    submitData.append("data", JSON.stringify(dataBody));
+    // console.log(dataBody);
+
+    submitData.append("body", JSON.stringify(dataBody));
 
     if (image) {
       const uriParts = image.uri.split(".");
@@ -104,6 +106,7 @@ export default function SignUpScreen() {
           (error as any).data?.message) ||
         "Registration failed";
       Alert.alert("Error", errorMessage);
+      console.error("Registration error:", error);
     }
   };
 

@@ -23,11 +23,14 @@ export const authApi = apiSlice.injectEndpoints({
             },
         }),
         register: builder.mutation({
-            query: (credentials) => ({
-                url: '/auth/register',
-                method: 'POST',
-                body: credentials,
-            }),
+            query: (credentials) => {
+                console.log(credentials);
+                return {
+                    url: '/auth/register',
+                    method: 'POST',
+                    body: credentials,
+                }
+            },
         }),
         forgotPassword: builder.mutation({
             query: (data) => ({
