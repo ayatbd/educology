@@ -12,10 +12,10 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
 } from "react-native";
 
-// Assuming you have these mutations in your API slice
-// If you don't have resendOtpMutation, you'll need to add it to your api file
 import {
   useVerifyOtpMutation,
   useResendOtpMutation,
@@ -24,41 +24,36 @@ import {
 export default function VerifyEmailScreen() {
   const router = useRouter();
 
-  // 1. Get the email passed from Sign Up screen
-  const { email } = useLocalSearchParams();
+  const { email } = useLocalSearchParams<{ email: string }>();
 
-  const [otp, setOtp] = useState(["", "", "", "", ""]);
-  const [timer, setTimer] = useState(30);
-  const inputRefs = useRef([]);
+  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
+  const [timer, setTimer] = useState<number>(30);
 
-  // Redux Toolkit Mutations
+  const inputRefs = useRef<(TextInput | null)[]>([]);
+
   const [verifyEmail, { isLoading: isVerifying }] = useVerifyOtpMutation();
-  // Optional: Add this to your API slice if you want the resend button to work with backend
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | undefined;
+    let interval: NodeJS.Timeout;
     if (timer > 0) {
       interval = setInterval(() => {
         setTimer((prev) => (prev > 0 ? prev - 1 : 0));
       }, 1000);
     }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [timer]);
 
   const handleOtpChange = (text: string, index: number) => {
-    // Handle pasting logic (if user pastes "12345")
     if (text.length > 1) {
-      const pastedChars = text.slice(0, 5).split("");
+      const pastedChars = text.slice(0, 6).split("");
       const newOtp = [...otp];
       pastedChars.forEach((char, i) => {
-        if (index + i < 5) newOtp[index + i] = char;
+        if (index + i < 6) newOtp[index + i] = char;
       });
       setOtp(newOtp);
-      // Focus the last filled input
-      const lastIndex = Math.min(index + text.length, 4);
+
+      const lastIndex = Math.min(index + text.length, 5);
       inputRefs.current[lastIndex]?.focus();
       return;
     }
@@ -67,12 +62,15 @@ export default function VerifyEmailScreen() {
     newOtp[index] = text;
     setOtp(newOtp);
 
-    if (text.length === 1 && index < 4) {
+    if (text.length === 1 && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  const handleKeyPress = (e, index) => {
+  const handleKeyPress = (
+    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    index: number,
+  ) => {
     if (e.nativeEvent.key === "Backspace") {
       if (otp[index] === "" && index > 0) {
         inputRefs.current[index - 1]?.focus();
@@ -83,7 +81,7 @@ export default function VerifyEmailScreen() {
     }
   };
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins < 10 ? "0" : ""}${mins}:${secs < 10 ? "0" : ""}${secs}`;
@@ -98,12 +96,11 @@ export default function VerifyEmailScreen() {
         return;
       }
 
-      // Call Backend API to resend
       await resendOtp({ email }).unwrap();
 
       Alert.alert("Sent", "A new code has been sent to your email.");
       setTimer(30);
-    } catch (error) {
+    } catch (error: any) {
       const msg = error?.data?.message || "Failed to resend code.";
       Alert.alert("Error", msg);
     }
@@ -112,8 +109,9 @@ export default function VerifyEmailScreen() {
   const handleVerify = async () => {
     const otpCode = otp.join("");
 
-    if (otpCode.length < 5) {
-      Alert.alert("Invalid Code", "Please enter the full 5-digit code.");
+    // Check for 6 digits
+    if (otpCode.length < 6) {
+      Alert.alert("Invalid Code", "Please enter the full 6-digit code.");
       return;
     }
 
@@ -128,20 +126,23 @@ export default function VerifyEmailScreen() {
     try {
       const payload = {
         email: email,
-        oneTimeCode: otpCode, // Ensure this key matches your backend expectation
+        otp: otpCode,
       };
 
       await verifyEmail(payload).unwrap();
 
       Alert.alert("Success", "Email verified successfully!", [
-        { text: "OK", onPress: () => router.replace("/login") }, // or navigate to Home
+        { text: "OK", onPress: () => router.replace("/login") },
       ]);
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage =
         error?.data?.message || "Verification failed. Invalid code.";
       Alert.alert("Verification Failed", errorMessage);
+      console.error("Verification error:", error);
     }
   };
+
+  const textInputMaxLength = (index: number) => (index === 0 ? 6 : 1);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -184,7 +185,7 @@ export default function VerifyEmailScreen() {
             </Text>
           </View>
 
-          <View className="flex-row justify-between mb-4 px-2">
+          <View className="flex-row justify-between mb-4 px-1">
             {otp.map((digit, index) => (
               <TextInput
                 key={index}
@@ -193,9 +194,9 @@ export default function VerifyEmailScreen() {
                 onChangeText={(text) => handleOtpChange(text, index)}
                 onKeyPress={(e) => handleKeyPress(e, index)}
                 keyboardType="number-pad"
-                maxLength={textInputMaxLength(index)} // Helper below or just use 1
+                maxLength={textInputMaxLength(index)}
                 selectTextOnFocus
-                className={`w-14 h-14 border rounded-2xl text-center text-2xl text-[#2A4559] ${
+                className={`w-12 h-12 border rounded-xl text-center text-xl text-[#2A4559] ${
                   digit
                     ? "border-[#569C7D] bg-[#F0F9F6]"
                     : "border-gray-300 bg-white"
@@ -251,8 +252,3 @@ export default function VerifyEmailScreen() {
     </SafeAreaView>
   );
 }
-
-// Helper to allow pasting logic (optional refinement)
-// If we pasted 5 chars into the first box, maxLength needs to allow it briefly for the handler to catch it
-// Otherwise keep it 1.
-const textInputMaxLength = (index) => (index === 0 ? 5 : 1);
