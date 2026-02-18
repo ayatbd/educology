@@ -29,7 +29,7 @@ export default function SignInScreen() {
   const [login, { isLoading }] = useLoginMutation();
 
   const handleForgotPassword = () => {
-    router.push("/forget-password");
+    router.push("/send-otp");
   };
 
   const handleSignIn = async () => {

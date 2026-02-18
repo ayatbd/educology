@@ -18,7 +18,7 @@ export default function RootLayout() {
           />
           <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
           <Stack.Screen
-            name="(auth)/reset-password"
+            name="(auth)/send-otp"
             options={{ headerShown: false }}
           />
           <Stack.Screen
