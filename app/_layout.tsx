@@ -22,7 +22,7 @@ export default function RootLayout() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="(auth)/forget-password"
+            name="(auth)/reset-password"
             options={{ headerShown: false }}
           />
           <Stack.Screen
