@@ -24,7 +24,11 @@ import {
 export default function VerifyEmailScreen() {
   const router = useRouter();
 
-  const { email } = useLocalSearchParams<{ email: string }>();
+  // 1. Receive the 'source' param here
+  const { email, source } = useLocalSearchParams<{
+    email: string;
+    source?: string;
+  }>();
 
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState<number>(30);
@@ -109,7 +113,6 @@ export default function VerifyEmailScreen() {
   const handleVerify = async () => {
     const otpCode = otp.join("");
 
-    // Check for 6 digits
     if (otpCode.length < 6) {
       Alert.alert("Invalid Code", "Please enter the full 6-digit code.");
       return;
@@ -132,7 +135,22 @@ export default function VerifyEmailScreen() {
       await verifyEmail(payload).unwrap();
 
       Alert.alert("Success", "Email verified successfully!", [
-        { text: "OK", onPress: () => router.replace("/login") },
+        {
+          text: "OK",
+          onPress: () => {
+            // 2. Conditional Navigation Logic
+            if (source === "forgot-password") {
+              // Redirect to Reset Password Page
+              router.replace({
+                pathname: "/reset-password", // Ensure this route exists in your app
+                params: { email: email }, // Usually need email on reset page too
+              });
+            } else {
+              // Default: Redirect to Login Page (Register flow)
+              router.replace("/login");
+            }
+          },
+        },
       ]);
     } catch (error: any) {
       const errorMessage =

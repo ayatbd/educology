@@ -34,8 +34,11 @@ export default function SendOtp() {
 
       // Navigate to verify page and pass the email
       router.push({
-        pathname: "/verify-email",
-        params: { email: email },
+        pathname: "/verify-email", // or whatever your path is
+        params: {
+          email: email,
+          source: "forgot-password",
+        },
       });
     } catch (error: any) {
       const errorMessage =
