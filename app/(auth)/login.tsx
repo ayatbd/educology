@@ -95,7 +95,7 @@ export default function SignInScreen() {
             </View>
 
             {/* --- Form Fields --- */}
-            <View className="space-y-6">
+            <View className="gap-6">
               {/* Email Input */}
               <View>
                 <Text className="text-gray-500 mb-3 ml-1 text-base">Email</Text>
