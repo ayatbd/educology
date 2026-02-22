@@ -18,6 +18,7 @@ import {
   Plus,
   MessageSquare,
 } from "lucide-react-native";
+import { useRouter } from "expo-router";
 
 type StateCardProps = {
   icon: React.ReactNode;
@@ -37,6 +38,7 @@ type LectureCardTypes = {
 };
 
 export default function ClassDetailsScreen() {
+  const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="light-content" backgroundColor="black" />
@@ -110,7 +112,10 @@ export default function ClassDetailsScreen() {
 
         {/* Toggle Tabs (Overview / Participants) */}
         <View className="px-5 mt-6 flex-row gap-4">
-          <TouchableOpacity className="flex-1 bg-[#34465B] flex-row items-center justify-center py-3 rounded-full border border-slate-600">
+          <TouchableOpacity
+            onPress={() => router.push("/class-overview")}
+            className="flex-1 bg-[#34465B] flex-row items-center justify-center py-3 rounded-full border border-slate-600"
+          >
             <Calendar color="white" size={18} className="mr-2" />
             <Text className="text-white font-medium">Class Overview</Text>
           </TouchableOpacity>
