@@ -114,13 +114,16 @@ export default function ClassDetailsScreen() {
         <View className="px-5 mt-6 flex-row gap-4">
           <TouchableOpacity
             onPress={() => router.push("/class-overview")}
-            className="flex-1 bg-[#34465B] flex-row items-center justify-center py-3 rounded-full border border-slate-600"
+            className="flex-1 gap-1 bg-white flex-row items-center justify-center py-3 rounded-full border border-slate-600"
           >
-            <Calendar color="white" size={18} className="mr-2" />
-            <Text className="text-white font-medium">Class Overview</Text>
+            <Calendar color="#333" size={18} className="mr-2" />
+            <Text className="text-slate-800 font-medium">Class Overview</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-1 bg-white flex-row items-center justify-center py-3 rounded-full">
+          <TouchableOpacity
+            onPress={() => router.push("/participants")}
+            className="flex-1 gap-1 bg-white flex-row items-center justify-center py-3 rounded-full border border-slate-600"
+          >
             <Users color="#333" size={18} className="mr-2" />
             <Text className="text-slate-800 font-medium">Participants</Text>
           </TouchableOpacity>

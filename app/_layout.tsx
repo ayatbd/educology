@@ -29,11 +29,15 @@ export default function RootLayout() {
             name="(auth)/verify-email"
             options={{ headerShown: false }}
           />
-
           <Stack.Screen
             name="class-details/[id]"
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="class-overview"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="participants" options={{ headerShown: false }} />
         </Stack>
       </PersistGate>
     </Provider>
