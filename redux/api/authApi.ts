@@ -39,12 +39,22 @@ export const authApi = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
-        verifyOtp: builder.mutation({
+        verifyForgotOtp: builder.mutation({
             query: (data) => ({
                 url: '/auth/verifyOtp',
                 method: 'POST',
                 body: data,
             }),
+        }),
+        verifyRegisterOtp: builder.mutation({
+            query: (data) => {
+                console.log(data);
+                return {
+                    url: '/auth/regOtpVerify',
+                    method: 'POST',
+                    body: data,
+                }
+            },
         }),
         resendOtp: builder.mutation({
             query: (data) => ({
@@ -53,13 +63,13 @@ export const authApi = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
-        sendOtp: builder.mutation({
-            query: (data) => ({
-                url: '/auth/resendOtp',
-                method: 'POST',
-                body: data,
-            }),
-        }),
+        // sendOtp: builder.mutation({
+        //     query: (data) => ({
+        //         url: '/auth/resendOtp',
+        //         method: 'POST',
+        //         body: data,
+        //     }),
+        // }),
         resetPassword: builder.mutation({
             query: (data) => ({
                 url: '/auth/resetPass',
@@ -74,8 +84,9 @@ export const {
     useLoginMutation,
     useRegisterMutation,
     useForgotPasswordMutation,
-    useVerifyOtpMutation,
+    useVerifyForgotOtpMutation,
+    useVerifyRegisterOtpMutation,
     useResendOtpMutation,
-    useSendOtpMutation,
+    // useSendOtpMutation,
     useResetPasswordMutation
 } = authApi;

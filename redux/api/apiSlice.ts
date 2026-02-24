@@ -12,9 +12,10 @@ interface ApiResponse {
         refreshToken: string;
     };
 }
-
+// http://10.10.20.34:5000/api/v1
+// https://lms-orpin-five.vercel.app/api/v1
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://10.10.20.34:5000/api/v1',
+    baseUrl: 'https://lms-orpin-five.vercel.app/api/v1',
     prepareHeaders: (headers, { getState }) => {
         const state = getState() as RootState;
         // 1. Read directly from Redux state (Redux Persist handles the storage retrieval)

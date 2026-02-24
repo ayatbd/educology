@@ -15,10 +15,7 @@ import {
   TextInputKeyPressEventData,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  useVerifyRegisterOtpMutation,
-  useResendOtpMutation,
-} from "@/redux/api/authApi";
+import { useVerifyForgotOtpMutation } from "@/redux/api/authApi";
 
 export default function VerifyEmailScreen() {
   const router = useRouter();
@@ -28,9 +25,8 @@ export default function VerifyEmailScreen() {
   const [timer, setTimer] = useState<number>(30);
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
-  const [verifyRegisterOtp, { isLoading: isVerifying }] =
-    useVerifyRegisterOtpMutation();
-  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+  const [verifyResendOtp, { isLoading: isVerifying }] =
+    useVerifyForgotOtpMutation();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -84,22 +80,6 @@ export default function VerifyEmailScreen() {
     return `${mins < 10 ? "0" : ""}${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  const handleResend = async () => {
-    if (timer > 0 || isResending) return;
-    try {
-      if (!email) {
-        Alert.alert("Error", "Email not found.");
-        return;
-      }
-      await resendOtp({ email }).unwrap();
-      Alert.alert("Sent", "A new code has been sent to your email.");
-      setTimer(30);
-    } catch (error: any) {
-      const msg = error?.data?.message || "Failed to resend code.";
-      Alert.alert("Error", msg);
-    }
-  };
-
   const handleVerify = async () => {
     const otpCode = otp.join("");
 
@@ -114,10 +94,20 @@ export default function VerifyEmailScreen() {
     }
 
     try {
-      await verifyRegisterOtp({ email, otp: otpCode }).unwrap();
+      await verifyResendOtp({ email, otp: otpCode }).unwrap();
       console.log(email, otp);
       Alert.alert("Success", "Email verified successfully!", [
-        { text: "OK", onPress: () => router.replace("/login") },
+        {
+          text: "OK",
+          onPress: () =>
+            router.replace({
+              pathname: "/reset-password", // or whatever your path is
+              params: {
+                email: email,
+                source: "send-otp",
+              },
+            }),
+        },
       ]);
     } catch (error: any) {
       const errorMessage = error?.data?.message || "Verification failed.";
@@ -196,16 +186,6 @@ export default function VerifyEmailScreen() {
             <Text className="text-gray-500 text-base">
               Didn’t get the code?
             </Text>
-            <TouchableOpacity
-              onPress={handleResend}
-              disabled={timer > 0 || isResending}
-            >
-              <Text
-                className={`font-bold text-base ${timer > 0 ? "text-gray-300" : "text-[#3B75A2]"}`}
-              >
-                {isResending ? "Sending..." : "Resend"}
-              </Text>
-            </TouchableOpacity>
           </View>
 
           <TouchableOpacity

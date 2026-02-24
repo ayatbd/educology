@@ -20,7 +20,7 @@ type CourseCardDetails = {
   image: string;
 };
 
-const HomePage = () => {
+const MainScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -195,4 +195,4 @@ const coursesData = [
   },
 ];
 
-export default HomePage;
+export default MainScreen;

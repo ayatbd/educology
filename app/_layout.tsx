@@ -3,41 +3,37 @@ import "./global.css";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useEffect(() => {
+    // Logic to hide splash screen could go here
+    // or inside PersistGate's onBeforeLift
+  }, []);
+
   return (
     <Provider store={store}>
-      {/* Wait for storage to load before rendering the app */}
-      <PersistGate loading={null} persistor={persistor}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="homepage" options={{ headerShown: false }} />
+      <PersistGate
+        loading={null}
+        persistor={persistor}
+        onBeforeLift={() => SplashScreen.hideAsync()}
+      >
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        >
+          <Stack.Screen name="index" />
+
+          {/* Example: making a specific screen a modal */}
           <Stack.Screen
-            name="(auth)/register"
-            options={{ headerShown: false }}
+            name="participants"
+            options={{ presentation: "modal" }}
           />
-          <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(auth)/send-otp"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(auth)/reset-password"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(auth)/verify-email"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="class-details/[id]"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="class-overview"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="participants" options={{ headerShown: false }} />
         </Stack>
       </PersistGate>
     </Provider>

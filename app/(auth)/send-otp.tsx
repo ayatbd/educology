@@ -5,7 +5,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   Text,
@@ -13,12 +12,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSendOtpMutation } from "@/redux/api/authApi";
+import { useForgotPasswordMutation } from "@/redux/api/authApi";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SendOtp() {
   const [email, setEmail] = useState("");
 
-  const [sendOtp, { isLoading }] = useSendOtpMutation();
+  const [sendOtp, { isLoading }] = useForgotPasswordMutation();
 
   const handleSubmit = async () => {
     if (!email.trim()) {
@@ -34,10 +34,10 @@ export default function SendOtp() {
 
       // Navigate to verify page and pass the email
       router.push({
-        pathname: "/verify-email", // or whatever your path is
+        pathname: "/verify-resend-otp", // or whatever your path is
         params: {
           email: email,
-          source: "forgot-password",
+          source: "send-otp",
         },
       });
     } catch (error: any) {

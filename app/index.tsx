@@ -4,15 +4,14 @@ import { useRouter } from "expo-router";
 import { LogOut } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-  Alert,
   Image,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
 // Mock Data
@@ -99,7 +98,7 @@ export default function Index() {
         contentContainerStyle={{ paddingBottom: 40 }}
       >
         {/* --- Logo Section --- */}
-        <View className="items-center mt-16 mb-8">
+        <View className="items-center mb-8">
           <Image
             source={require("../assets/images/home/logo.png")}
             className="w-[226px] h-48"
@@ -176,13 +175,13 @@ export default function Index() {
         >
           <Text className="text-white text-xl font-bold">Next</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => router.push("/homepage")} // 5. Added navigation handler here
+        {/* <TouchableOpacity
+          onPress={() => router.push("/main")} // 5. Added navigation handler here
           className="mt-10 bg-[#C59D5F] py-4 rounded-3xl items-center shadow-lg shadow-orange-100"
           activeOpacity={0.9}
         >
           <Text className="text-white text-xl font-bold">Go to Homepage</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     </SafeAreaView>
   );

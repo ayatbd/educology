@@ -3,10 +3,6 @@ import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Image,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
   StatusBar,
   Text,
   TextInput,
@@ -15,12 +11,12 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-// 1. Import the mutation hook
-// Make sure this path points to your actual authApi file location
 import { useLoginMutation } from "../../redux/api/authApi";
 
-export default function SignInScreen() {
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +39,7 @@ export default function SignInScreen() {
       const response = await login({ email, password, fcmToken }).unwrap();
 
       console.log("Login Successful:", response);
-      router.replace("/homepage");
+      router.replace("/main");
     } catch (err: any) {
       console.error("Login Failed:", err);
       const errorMessage =
@@ -56,134 +52,127 @@ export default function SignInScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
+      <KeyboardAwareScrollView
+        className="flex-1 px-6"
+        contentContainerStyle={{ flexGrow: 1 }}
+        enableOnAndroid={true}
+        extraScrollHeight={50}
+        enableAutomaticScroll={true}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "center",
-          }}
-          className="px-6"
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* --- Logo Section --- */}
-          <View className="items-center mb-8">
-            <Image
-              source={require("../../assets/images/home/logo.png")}
-              className="w-[226px] h-48"
-              resizeMode="contain"
-            />
-          </View>
+        {/* --- Logo Section --- */}
+        <View className="items-center mb-8">
+          <Image
+            source={require("../../assets/images/home/logo.png")}
+            className="w-[226px] h-48"
+            resizeMode="contain"
+          />
+        </View>
 
-          {/* Wrapper View */}
-          <View className="w-full">
-            {/* --- Header --- */}
-            <View className="items-center mb-12">
-              <View className="flex-row">
-                <Text className="text-3xl font-bold text-[#569C7D] mr-2">
-                  Welcome to
-                </Text>
-                <Text className="text-3xl font-bold text-[#3B75A2]">
-                  educology
-                </Text>
-              </View>
-              <Text className="text-gray-500 mt-3 text-base font-medium">
-                Sign in to access your account
+        {/* Wrapper View */}
+        <View className="w-full">
+          {/* --- Header --- */}
+          <View className="items-center mb-12">
+            <View className="flex-row">
+              <Text className="text-3xl font-bold text-[#569C7D] mr-2">
+                Welcome to
+              </Text>
+              <Text className="text-3xl font-bold text-[#3B75A2]">
+                educology
               </Text>
             </View>
+            <Text className="text-gray-500 mt-3 text-base font-medium">
+              Sign in to access your account
+            </Text>
+          </View>
 
-            {/* --- Form Fields --- */}
-            <View className="gap-6">
-              {/* Email Input */}
-              <View>
-                <Text className="text-gray-500 mb-3 ml-1 text-base">Email</Text>
+          {/* --- Form Fields --- */}
+          <View className="gap-6">
+            {/* Email Input */}
+            <View>
+              <Text className="text-gray-500 mb-3 ml-1 text-base">Email</Text>
+              <TextInput
+                placeholder="Enter your email"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                // Bind state
+                value={email}
+                onChangeText={setEmail}
+                className="bg-gray-100 rounded-2xl h-14 px-5 text-black text-base"
+              />
+            </View>
+
+            {/* Password Input */}
+            <View>
+              <Text className="text-gray-500 mb-3 ml-1 text-base">
+                Password
+              </Text>
+              <View className="flex-row items-center bg-gray-100 rounded-2xl h-14 px-5">
                 <TextInput
-                  placeholder="Enter your email"
+                  placeholder="Enter your Password"
                   placeholderTextColor="#9CA3AF"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
                   // Bind state
-                  value={email}
-                  onChangeText={setEmail}
-                  className="bg-gray-100 rounded-2xl h-14 px-5 text-black text-base"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!showPassword}
+                  className="flex-1 text-black text-base h-full"
                 />
-              </View>
-
-              {/* Password Input */}
-              <View>
-                <Text className="text-gray-500 mb-3 ml-1 text-base">
-                  Password
-                </Text>
-                <View className="flex-row items-center bg-gray-100 rounded-2xl h-14 px-5">
-                  <TextInput
-                    placeholder="Enter your Password"
-                    placeholderTextColor="#9CA3AF"
-                    // Bind state
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!showPassword}
-                    className="flex-1 text-black text-base h-full"
-                  />
-                  <TouchableOpacity
-                    onPress={() => setShowPassword(!showPassword)}
-                    className="ml-2"
-                  >
-                    {showPassword ? (
-                      <Eye size={22} color="#6B7280" />
-                    ) : (
-                      <EyeOff size={22} color="#6B7280" />
-                    )}
-                  </TouchableOpacity>
-                </View>
-
-                {/* Forget Password Link */}
                 <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={handleForgotPassword}
-                  className="items-end mt-3"
+                  onPress={() => setShowPassword(!showPassword)}
+                  className="ml-2"
                 >
-                  <Text className="text-gray-400 text-sm">
-                    Forget Password?
-                  </Text>
+                  {showPassword ? (
+                    <Eye size={22} color="#6B7280" />
+                  ) : (
+                    <EyeOff size={22} color="#6B7280" />
+                  )}
                 </TouchableOpacity>
               </View>
 
-              {/* --- Sign In Button --- */}
+              {/* Forget Password Link */}
               <TouchableOpacity
-                className={`w-full rounded-full h-14 items-center justify-center mt-6 shadow-lg shadow-orange-900/20 ${
-                  isLoading ? "bg-[#C59D5F]/70" : "bg-[#C59D5F]"
-                }`}
                 activeOpacity={0.8}
-                onPress={handleSignIn}
-                disabled={isLoading} // Prevent double clicks
+                onPress={handleForgotPassword}
+                className="items-end mt-3"
               >
-                {isLoading ? (
-                  <ActivityIndicator color="#FFF" />
-                ) : (
-                  <Text className="text-white text-xl font-bold">Sign In</Text>
-                )}
+                <Text className="text-gray-400 text-sm">Forget Password?</Text>
               </TouchableOpacity>
+            </View>
 
-              {/* --- Footer Link --- */}
-              <View className="flex-row justify-center mt-8">
-                <Text className="text-gray-500 text-base">
-                  Don’t have an account?{" "}
+            {/* --- Sign In Button --- */}
+            <TouchableOpacity
+              className={`w-full rounded-full h-14 items-center justify-center mt-6 shadow-lg shadow-orange-900/20 ${
+                isLoading ? "bg-[#C59D5F]/70" : "bg-[#C59D5F]"
+              }`}
+              activeOpacity={0.8}
+              onPress={handleSignIn}
+              disabled={isLoading} // Prevent double clicks
+            >
+              {isLoading ? (
+                <ActivityIndicator color="#FFF" />
+              ) : (
+                <Text className="text-white text-xl font-bold">Sign In</Text>
+              )}
+            </TouchableOpacity>
+
+            {/* --- Footer Link --- */}
+            <View className="flex-row justify-center mt-8">
+              <Text className="text-gray-500 text-base">
+                Don’t have an account?{" "}
+              </Text>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => router.push("/register")}
+              >
+                <Text className="text-[#3B75A2] font-bold text-base">
+                  Sign Up
                 </Text>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => router.push("/register")}
-                >
-                  <Text className="text-[#3B75A2] font-bold text-base">
-                    Sign Up
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }
