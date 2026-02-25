@@ -49,7 +49,13 @@ const MainScreen = () => {
             </View>
           </View>
 
-          <TouchableOpacity className="relative p-2 bg-gray-50 rounded-full">
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              router.push("/notification");
+            }}
+            className="relative p-2 bg-gray-50 rounded-full"
+          >
             <Bell size={24} color="#334155" />
             <View className="absolute top-2 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white" />
           </TouchableOpacity>
