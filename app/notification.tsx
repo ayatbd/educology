@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowLeft, BellRing } from "lucide-react-native";
+import { useGetNotificationsQuery } from "@/redux/api/notificationApi";
 
 // 1. Define the Type
 interface Notification {
@@ -20,52 +21,55 @@ interface Notification {
 }
 
 // 2. Mock Data
-const notifications: Notification[] = [
-  {
-    id: "1",
-    title: "New Homework Submission",
-    description: '3 students submitted homework for "Grade 10 – Mathematics"',
-    time: "16 minutes ago",
-    isUnread: true,
-  },
-  {
-    id: "2",
-    title: "Exam Submissions Received",
-    description: "Answer sheets for the Midterm Exam are ready for review.",
-    time: "16 minutes ago",
-  },
-  {
-    id: "3",
-    title: "Lesson Recording Uploaded",
-    description: 'A new lesson recording has been added to "Algebra Basics".',
-    time: "16 minutes ago",
-  },
-  {
-    id: "4",
-    title: "New Announcement Published",
-    description:
-      "Your announcement has been successfully shared with students.",
-    time: "16 minutes ago",
-  },
-  {
-    id: "5",
-    title: "New Announcement Published",
-    description:
-      "Your announcement has been successfully shared with students.",
-    time: "16 minutes ago",
-  },
-  {
-    id: "6",
-    title: "New Announcement Published",
-    description:
-      "Your announcement has been successfully shared with students.",
-    time: "16 minutes ago",
-  },
-];
+// const notifications: Notification[] = [
+//   {
+//     id: "1",
+//     title: "New Homework Submission",
+//     description: '3 students submitted homework for "Grade 10 – Mathematics"',
+//     time: "16 minutes ago",
+//     isUnread: true,
+//   },
+//   {
+//     id: "2",
+//     title: "Exam Submissions Received",
+//     description: "Answer sheets for the Midterm Exam are ready for review.",
+//     time: "16 minutes ago",
+//   },
+//   {
+//     id: "3",
+//     title: "Lesson Recording Uploaded",
+//     description: 'A new lesson recording has been added to "Algebra Basics".',
+//     time: "16 minutes ago",
+//   },
+//   {
+//     id: "4",
+//     title: "New Announcement Published",
+//     description:
+//       "Your announcement has been successfully shared with students.",
+//     time: "16 minutes ago",
+//   },
+//   {
+//     id: "5",
+//     title: "New Announcement Published",
+//     description:
+//       "Your announcement has been successfully shared with students.",
+//     time: "16 minutes ago",
+//   },
+//   {
+//     id: "6",
+//     title: "New Announcement Published",
+//     description:
+//       "Your announcement has been successfully shared with students.",
+//     time: "16 minutes ago",
+//   },
+// ];
 
 export default function NotificationScreen() {
   const router = useRouter();
 
+  const { data: notificationsData } = useGetNotificationsQuery(undefined);
+  console.log(notificationsData);
+  const notifications = notificationsData?.data?.notifications || [];
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
@@ -85,7 +89,7 @@ export default function NotificationScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-        {notifications.map((item) => (
+        {notifications?.map((item: Notification) => (
           <TouchableOpacity
             key={item.id}
             activeOpacity={0.7}
@@ -103,13 +107,13 @@ export default function NotificationScreen() {
             {/* Text Content */}
             <View className="flex-1 ml-4">
               <Text className="text-lg font-bold text-slate-800 leading-tight">
-                {item.title}
+                {item?.title}
               </Text>
               <Text className="text-slate-500 text-sm mt-1 leading-5">
-                {item.description}
+                {item?.description}
               </Text>
               <Text className="text-emerald-600/70 font-medium text-xs mt-2">
-                {item.time}
+                {item?.time}
               </Text>
             </View>
           </TouchableOpacity>

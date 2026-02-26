@@ -87,6 +87,6 @@ const baseQueryWithReauth = async (args: string | FetchArgs, api: BaseQueryApi, 
 export const apiSlice = createApi({
     reducerPath: 'api',
     baseQuery: baseQueryWithReauth,
-    tagTypes: [],
+    tagTypes: ["Notification"],
     endpoints: () => ({}),
 });
