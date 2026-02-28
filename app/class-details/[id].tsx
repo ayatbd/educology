@@ -150,7 +150,10 @@ export default function ClassDetailsScreen() {
 
         {/* Add Class Button */}
         <View className="px-5 mt-6">
-          <TouchableOpacity className="bg-[#CCA35E] rounded-full py-3 flex-row items-center justify-center gap-2">
+          <TouchableOpacity
+            onPress={() => router.push("/add-class")}
+            className="bg-[#CCA35E] rounded-full py-3 flex-row items-center justify-center gap-2"
+          >
             <Plus color="white" size={24} />
             <Text className="text-white font-semibold text-lg">Add Class</Text>
           </TouchableOpacity>

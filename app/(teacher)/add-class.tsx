@@ -9,7 +9,10 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router"; // To get course ID from URL
 import {
   Calendar,
   Clock,
@@ -25,23 +28,59 @@ import {
   Italic,
   Underline,
   Strikethrough,
-  Link,
   Paperclip,
   UploadCloud,
 } from "lucide-react-native";
 
-const AddClassScreen = () => {
-  const [title, setTitle] = useState("");
-  const [zoomLink, setZoomLink] = useState("");
+import { useAddClassMutation } from "@/redux/api/classApi";
 
-  // Reusable Input Label Component
+const AddClassScreen = () => {
+  const router = useRouter();
+  // Usually, you pass the course ID as a parameter to this screen
+  const { id: courseId } = useLocalSearchParams<{ id: string }>();
+
+  // 1. Setup State for all fields
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState(""); // Format: YYYY-MM-DD
+  const [time, setTime] = useState(""); // Format: 10:00 AM
+  const [details, setDetails] = useState("");
+  const [link, setLink] = useState("");
+
+  const [addClass, { isLoading }] = useAddClassMutation();
+
+  // 2. Handle Submit Logic
+  const handleUpload = async () => {
+    if (!title || !date || !time || !details || !link) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
+    }
+
+    const payload = {
+      course: courseId || "69918b0e5c764119a79a4191", // Fallback to your provided ID
+      title,
+      date,
+      time,
+      details,
+      link,
+    };
+
+    try {
+      await addClass(payload).unwrap();
+      Alert.alert("Success", "Class added successfully!", [
+        { text: "OK", onPress: () => router.back() },
+      ]);
+    } catch (error: any) {
+      const msg = error?.data?.message || "Failed to add class.";
+      Alert.alert("Error", msg);
+    }
+  };
+
   const Label = ({ children }: { children: string }) => (
     <Text className="text-zinc-500 text-lg mb-2 mt-4 ml-1 font-medium">
       {children}
     </Text>
   );
 
-  // Reusable Toolbar Button
   const ToolBtn = ({
     children,
     borderRight = true,
@@ -57,10 +96,9 @@ const AddClassScreen = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      <StatusBar barStyle="light-content" />
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
       <View className="py-4 items-center">
         <Text className="text-2xl font-bold text-[#3B75A2]">Add Class</Text>
       </View>
@@ -70,11 +108,10 @@ const AddClassScreen = () => {
         className="flex-1"
       >
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: 120 }}
           className="px-4"
           showsVerticalScrollIndicator={false}
         >
-          {/* Title Input */}
           <Label>Title</Label>
           <TextInput
             placeholder="Enter Class Name"
@@ -84,23 +121,32 @@ const AddClassScreen = () => {
             onChangeText={setTitle}
           />
 
-          {/* Date & Time Section */}
           <Label>Expected Live Class starting Date & Time</Label>
           <View className="flex-row gap-3">
             <View className="flex-1 flex-row items-center bg-white rounded-2xl h-14 px-4 justify-between">
-              <Text className="text-gray-400 text-lg">DD-MM-YYYY</Text>
+              <TextInput
+                placeholder="YYYY-MM-DD"
+                placeholderTextColor="#9ca3af"
+                className="flex-1 text-black text-lg"
+                value={date}
+                onChangeText={setDate}
+              />
               <Calendar size={20} color="#333" />
             </View>
             <View className="flex-1 flex-row items-center bg-white rounded-2xl h-14 px-4 justify-between">
-              <Text className="text-gray-400 text-lg">-- : -- AM</Text>
+              <TextInput
+                placeholder="HH:MM AM"
+                placeholderTextColor="#9ca3af"
+                className="flex-1 text-black text-lg"
+                value={time}
+                onChangeText={setTime}
+              />
               <Clock size={20} color="#333" />
             </View>
           </View>
 
-          {/* Rich Text Editor UI */}
           <Label>Add Class Details</Label>
           <View className="bg-white rounded-2xl overflow-hidden min-h-[250px]">
-            {/* Toolbar Row 1 */}
             <View className="flex-row border-b border-zinc-200">
               <TouchableOpacity className="flex-[1.5] flex-row items-center justify-between px-3 py-3 border-r border-zinc-200">
                 <Text className="text-[#3B75A2] font-bold text-lg">
@@ -125,7 +171,6 @@ const AddClassScreen = () => {
               </ToolBtn>
             </View>
 
-            {/* Toolbar Row 2 */}
             <View className="flex-row border-b border-zinc-200">
               <ToolBtn>
                 <Type size={20} color="#333" />
@@ -150,15 +195,17 @@ const AddClassScreen = () => {
               </View>
             </View>
 
-            {/* Editor Area */}
             <TextInput
               multiline
-              className="flex-1 p-4 text-lg text-black text-top"
+              placeholder="Enter class details here..."
+              placeholderTextColor="#9ca3af"
+              className="flex-1 p-4 text-lg text-black"
               textAlignVertical="top"
+              value={details}
+              onChangeText={setDetails}
             />
           </View>
 
-          {/* Attached Document Section */}
           <Label>Attached Document (Optional)</Label>
           <View className="bg-white rounded-2xl p-6 items-center">
             <UploadCloud size={40} color="#333" strokeWidth={1.5} />
@@ -167,7 +214,6 @@ const AddClassScreen = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Zoom Link Section */}
           <Label>Share Zoom Link</Label>
           <View className="bg-white rounded-2xl min-h-[100px] p-4">
             <TextInput
@@ -175,18 +221,25 @@ const AddClassScreen = () => {
               placeholderTextColor="#9ca3af"
               multiline
               className="text-lg text-black"
+              value={link}
+              onChangeText={setLink}
             />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* Bottom Upload Button */}
       <View className="absolute bottom-6 left-0 right-0 px-4">
         <TouchableOpacity
-          className="bg-[#D4A76A] h-16 rounded-full items-center justify-center shadow-lg"
+          className={`h-16 rounded-full items-center justify-center shadow-lg ${isLoading ? "bg-gray-400" : "bg-[#D4A76A]"}`}
           activeOpacity={0.8}
+          onPress={handleUpload}
+          disabled={isLoading}
         >
-          <Text className="text-white text-2xl font-bold">Upload</Text>
+          {isLoading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white text-2xl font-bold">Upload</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
