@@ -5,13 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
   Alert,
   ActivityIndicator,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router"; // To get course ID from URL
 import {
   Calendar,
@@ -206,13 +206,13 @@ const AddClassScreen = () => {
             />
           </View>
 
-          <Label>Attached Document (Optional)</Label>
+          {/* <Label>Attached Document (Optional)</Label>
           <View className="bg-white rounded-2xl p-6 items-center">
             <UploadCloud size={40} color="#333" strokeWidth={1.5} />
             <TouchableOpacity className="bg-[#2A4559] px-10 py-3 rounded-full mt-3">
               <Text className="text-white font-bold text-lg">Upload File</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <Label>Share Zoom Link</Label>
           <View className="bg-white rounded-2xl min-h-[100px] p-4">
