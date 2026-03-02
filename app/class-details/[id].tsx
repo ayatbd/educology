@@ -21,7 +21,7 @@ import {
 import { useRouter } from "expo-router";
 import { useGetClassesQuery } from "@/redux/api/classApi";
 
-type TabType = "classes" | "examination" | "announcement";
+type TabType = "classes" | "examination" | "homework";
 
 type StateCardProps = {
   icon: React.ReactNode;
@@ -134,9 +134,7 @@ export default function ClassDetailsScreen() {
         </View>
 
         <View className="px-5 mt-6 border-b border-gray-100 flex-row">
-          {(
-            ["classes", "examination", "announcement", "homework"] as TabType[]
-          ).map((tab) => (
+          {(["classes", "examination", "homework"] as TabType[]).map((tab) => (
             <TouchableOpacity
               key={tab}
               onPress={() => setActiveTab(tab)}
@@ -180,15 +178,6 @@ export default function ClassDetailsScreen() {
             <ClipboardList size={48} color="#cbd5e1" />
             <Text className="text-gray-400 mt-2 text-lg">
               No examinations scheduled yet.
-            </Text>
-          </View>
-        )}
-
-        {activeTab === "announcement" && (
-          <View className="px-5 mt-10 items-center">
-            <MessageSquare size={48} color="#cbd5e1" />
-            <Text className="text-gray-400 mt-2 text-lg">
-              No announcements posted.
             </Text>
           </View>
         )}
