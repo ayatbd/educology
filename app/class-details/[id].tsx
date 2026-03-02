@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -20,6 +20,8 @@ import {
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
+type TabType = "classes" | "examination" | "announcement";
+
 type StateCardProps = {
   icon: React.ReactNode;
   value: string;
@@ -30,7 +32,6 @@ type StateCardProps = {
 type LectureCardTypes = {
   title: string;
   date: string;
-  time: string;
   instructorImg: string;
   instructor: string;
   postedDate: string;
@@ -39,11 +40,13 @@ type LectureCardTypes = {
 
 export default function ClassDetailsScreen() {
   const router = useRouter();
+
+  const [activeTab, setActiveTab] = useState<TabType>("classes");
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <StatusBar barStyle="light-content" backgroundColor="black" />
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      {/* Top Header Title */}
       <View className="items-center py-4">
         <Text className="text-slate-500 text-xl font-bold">Class Details</Text>
       </View>
@@ -52,7 +55,6 @@ export default function ClassDetailsScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
       >
-        {/* Course Info Header */}
         <View className="px-5 mb-4">
           <View className="flex-row justify-between items-start">
             <View>
@@ -70,7 +72,6 @@ export default function ClassDetailsScreen() {
           </View>
         </View>
 
-        {/* Stats Grid */}
         <View className="px-5 flex-row flex-wrap justify-between gap-y-4">
           <StatCard
             icon={<Calendar color="#4CAF50" size={28} />}
@@ -101,7 +102,6 @@ export default function ClassDetailsScreen() {
           />
         </View>
 
-        {/* Generate Report Button */}
         <View className="px-5 mt-6">
           <TouchableOpacity className="bg-[#CCA35E] rounded-full py-3 items-center">
             <Text className="text-white font-semibold text-base">
@@ -110,11 +110,10 @@ export default function ClassDetailsScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Toggle Tabs (Overview / Participants) */}
         <View className="px-5 mt-6 flex-row gap-4">
           <TouchableOpacity
             onPress={() => router.push("/class-overview")}
-            className="flex-1 gap-1 bg-white flex-row items-center justify-center py-3 rounded-full border border-slate-600"
+            className="flex-1 flex-row items-center justify-center py-3 rounded-full border border-slate-300"
           >
             <Calendar color="#333" size={18} className="mr-2" />
             <Text className="text-slate-800 font-medium">Class Overview</Text>
@@ -122,65 +121,86 @@ export default function ClassDetailsScreen() {
 
           <TouchableOpacity
             onPress={() => router.push("/participants")}
-            className="flex-1 gap-1 bg-white flex-row items-center justify-center py-3 rounded-full border border-slate-600"
+            className="flex-1 flex-row items-center justify-center py-3 rounded-full border border-slate-300"
           >
             <Users color="#333" size={18} className="mr-2" />
             <Text className="text-slate-800 font-medium">Participants</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Sub Navigation (Classes / Exam / Announcement) */}
-        <View className="px-5 mt-6 border-b border-gray-800 flex-row">
-          <View className="mr-6 border-b-2 border-[#5B9BD5] pb-3">
-            <Text className="text-[#5B9BD5] font-semibold text-base">
-              Classes
-            </Text>
-          </View>
-          <View className="mr-6 pb-3">
-            <Text className="text-gray-500 font-semibold text-base">
-              Examination
-            </Text>
-          </View>
-          <View className="pb-3">
-            <Text className="text-gray-500 font-semibold text-base">
-              Announcement
-            </Text>
-          </View>
-        </View>
-
-        {/* Add Class Button */}
-        <View className="px-5 mt-6">
-          <TouchableOpacity
-            onPress={() => router.push("/add-class")}
-            className="bg-[#CCA35E] rounded-full py-3 flex-row items-center justify-center gap-2"
-          >
-            <Plus color="white" size={24} />
-            <Text className="text-white font-semibold text-lg">Add Class</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Class List */}
-        <View className="px-5 mt-6 gap-4">
-          {lectures.map((lecture, index) => (
-            <LectureCard key={index} data={lecture} />
+        <View className="px-5 mt-6 border-b border-gray-100 flex-row">
+          {(
+            ["classes", "examination", "announcement", "homework"] as TabType[]
+          ).map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => setActiveTab(tab)}
+              className={`mr-6 pb-3 ${activeTab === tab ? "border-b-2 border-[#5B9BD5]" : ""}`}
+            >
+              <Text
+                className={`font-semibold text-base capitalize ${
+                  activeTab === tab ? "text-[#5B9BD5]" : "text-gray-400"
+                }`}
+              >
+                {tab === "examination" ? "Examination" : tab}
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
+
+        {activeTab === "classes" && (
+          <View>
+            <View className="px-5 mt-6">
+              <TouchableOpacity
+                onPress={() => router.push("/add-class")}
+                className="bg-[#CCA35E] rounded-full py-3 flex-row items-center justify-center gap-2"
+              >
+                <Plus color="white" size={24} />
+                <Text className="text-white font-semibold text-lg">
+                  Add Class
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View className="px-5 mt-6 gap-4">
+              {lectures.map((lecture, index) => (
+                <LectureCard key={index} data={lecture} />
+              ))}
+            </View>
+          </View>
+        )}
+
+        {activeTab === "examination" && (
+          <View className="px-5 mt-10 items-center">
+            <ClipboardList size={48} color="#cbd5e1" />
+            <Text className="text-gray-400 mt-2 text-lg">
+              No examinations scheduled yet.
+            </Text>
+          </View>
+        )}
+
+        {activeTab === "announcement" && (
+          <View className="px-5 mt-10 items-center">
+            <MessageSquare size={48} color="#cbd5e1" />
+            <Text className="text-gray-400 mt-2 text-lg">
+              No announcements posted.
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-// --- Reusable Components ---
-
 const StatCard = ({ icon, value, label, subIcon }: StateCardProps) => (
   <View className="bg-[#F2FFF9] w-[48%] rounded-xl p-4 h-28 justify-between relative">
     <View className="flex-row justify-between items-start">
-      <View className="bg-gray-100 p-2 rounded-lg">{icon}</View>
+      <View className="bg-white p-2 rounded-lg shadow-sm">{icon}</View>
       <Text className="text-[#A68656] text-3xl font-serif">{value}</Text>
     </View>
     <View className="flex-row items-end justify-end">
       {subIcon}
-      <Text className="text-gray-600 text-xs font-medium text-right mt-1 w-full">
+      <Text className="text-gray-600 text-[10px] font-medium text-right mt-1 w-full leading-3">
         {label}
       </Text>
     </View>
@@ -188,16 +208,16 @@ const StatCard = ({ icon, value, label, subIcon }: StateCardProps) => (
 );
 
 const LectureCard = ({ data }: { data: LectureCardTypes }) => (
-  <View className="bg-[#FDFDFD] rounded-xl p-4">
+  <View className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
     <Text className="text-lg font-bold text-[#34465B]">{data.title}</Text>
-    <Text className="text-gray-500 text-xs mt-1">
+    <Text className="text-gray-400 text-xs mt-1">
       Live Class starting Time : {data.date}
     </Text>
 
-    <View className="flex-row items-center mt-3 border-b border-gray-200 pb-3">
+    <View className="flex-row items-center mt-3 border-b border-gray-100 pb-3">
       <Image
         source={{ uri: data.instructorImg }}
-        className="w-8 h-8 rounded-full"
+        className="w-8 h-8 rounded-full bg-gray-200"
       />
       <View className="ml-2">
         <Text className="text-[#4F7da4] text-sm font-semibold">
@@ -208,31 +228,29 @@ const LectureCard = ({ data }: { data: LectureCardTypes }) => (
     </View>
 
     <View className="mt-2 flex-row items-center">
-      <MessageSquare size={14} color="#666" />
-      <Text className="text-gray-500 text-xs ml-1">{data.comments}</Text>
+      <MessageSquare size={14} color="#94a3b8" />
+      <Text className="text-gray-400 text-xs ml-1">
+        {data.comments} Comments
+      </Text>
     </View>
   </View>
 );
-
-// --- Mock Data ---
 
 const lectures = [
   {
     title: "Lecture-1 (Algebra Part-1)",
     date: "29 Jan, 2026 | 10:00 AM",
     instructor: "Rakibul Hasan",
-    instructorImg:
-      "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
-    postedDate: "19 Nov,2026 | 12:00PM",
+    instructorImg: "https://i.pravatar.cc/150?u=1",
+    postedDate: "19 Nov, 2026 | 12:00PM",
     comments: "02",
   },
   {
     title: "Lecture-2 (Algebra Part-2)",
     date: "02 Feb, 2026 | 10:00 AM",
     instructor: "Rakibul Hasan",
-    instructorImg:
-      "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
-    postedDate: "19 Nov,2026 | 12:00PM",
+    instructorImg: "https://i.pravatar.cc/150?u=1",
+    postedDate: "19 Nov, 2026 | 12:00PM",
     comments: "05",
   },
 ];

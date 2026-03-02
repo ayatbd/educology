@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 // Mock Data
 const stats = [
@@ -104,7 +105,7 @@ export default function ClassOverview() {
 
       {/* Header */}
       <View className="flex-row items-center px-4 py-4 justify-between">
-        <TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={28} color="#1e293b" />
         </TouchableOpacity>
         <Text className="text-2xl font-semibold text-slate-800">
