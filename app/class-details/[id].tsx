@@ -1,25 +1,26 @@
-import React, { useState } from "react";
+import { useGetClassesQuery } from "@/redux/api/classApi";
+import { useGetTasksQuery } from "@/redux/api/tasksApi";
+import { useRouter } from "expo-router";
 import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Calendar,
-  Users,
-  CheckCircle2,
   BookOpen,
+  Calendar,
+  CheckCircle2,
   ClipboardList,
   Clock,
-  Plus,
   MessageSquare,
+  Plus,
+  Users,
 } from "lucide-react-native";
-import { useRouter } from "expo-router";
-import { useGetClassesQuery } from "@/redux/api/classApi";
+import React, { useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type TabType = "classes" | "examination" | "homework";
 
@@ -43,11 +44,19 @@ export default function ClassDetailsScreen() {
   const router = useRouter();
   const { data: classes, isLoading } = useGetClassesQuery(undefined);
   const lectures = classes?.data || [];
-  // console.log(classes);
+  const { data: tasksData, isLoading: isLoadingHomework } =
+    useGetTasksQuery(undefined);
+  const tasks = tasksData?.data?.result || [];
+  const homeworks = tasks.filter(
+    (task: any) => task.type?.toLowerCase() === "homework",
+  );
+  const exam = tasks.filter((task: any) => task.type?.toLowerCase() === "exam");
+  console.log(exam);
 
   const [activeTab, setActiveTab] = useState<TabType>("classes");
 
   if (isLoading) return <Text>Loading...</Text>;
+  if (isLoadingHomework) return <Text>Loading...</Text>;
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -172,13 +181,25 @@ export default function ClassDetailsScreen() {
             </View>
           </View>
         )}
+        {activeTab === "homework" && (
+          <View>
+            <View className="px-5 mt-6">
+              <TouchableOpacity
+                onPress={() => router.push("/add-homework")}
+                className="bg-[#CCA35E] rounded-full py-3 flex-row items-center justify-center gap-2"
+              >
+                <Plus color="white" size={24} />
+                <Text className="text-white font-semibold text-lg">
+                  Add Homework*
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-        {activeTab === "examination" && (
-          <View className="px-5 mt-10 items-center">
-            <ClipboardList size={48} color="#cbd5e1" />
-            <Text className="text-gray-400 mt-2 text-lg">
-              No examinations scheduled yet.
-            </Text>
+            <View className="px-5 mt-6 gap-4">
+              {homeworks?.map((homework: any, index: number) => (
+                <LectureCard key={index} data={homework} />
+              ))}
+            </View>
           </View>
         )}
       </ScrollView>

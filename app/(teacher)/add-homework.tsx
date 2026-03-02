@@ -1,38 +1,38 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StatusBar,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router"; // To get course ID from URL
 import {
-  Calendar,
-  Clock,
-  ChevronDown,
   AlignCenter,
   AlignLeft,
   AlignRight,
+  Bold,
+  Calendar,
+  ChevronDown,
+  Clock,
+  Highlighter,
+  Italic,
   List,
   ListOrdered,
-  Type,
-  Highlighter,
-  Bold,
-  Italic,
-  Underline,
-  Strikethrough,
   Paperclip,
+  Strikethrough,
+  Type,
+  Underline,
   UploadCloud,
 } from "lucide-react-native";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useAddClassMutation } from "@/redux/api/classApi";
+import { useAddHomeworksMutation } from "@/redux/api/tasksApi";
 
 const AddHomeworkScreen = () => {
   const router = useRouter();
@@ -46,7 +46,7 @@ const AddHomeworkScreen = () => {
   const [details, setDetails] = useState("");
   const [link, setLink] = useState("");
 
-  const [addClass, { isLoading }] = useAddClassMutation();
+  const [addClass, { isLoading }] = useAddHomeworksMutation();
 
   // 2. Handle Submit Logic
   const handleUpload = async () => {
