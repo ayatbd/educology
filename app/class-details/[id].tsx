@@ -50,8 +50,10 @@ export default function ClassDetailsScreen() {
   const homeworks = tasks.filter(
     (task: any) => task.type?.toLowerCase() === "homework",
   );
-  const exam = tasks.filter((task: any) => task.type?.toLowerCase() === "exam");
-  console.log(exam);
+  const exams = tasks.filter(
+    (task: any) => task.type?.toLowerCase() === "exam",
+  );
+  // console.log(exam);
 
   const [activeTab, setActiveTab] = useState<TabType>("classes");
 
@@ -198,6 +200,27 @@ export default function ClassDetailsScreen() {
             <View className="px-5 mt-6 gap-4">
               {homeworks?.map((homework: any, index: number) => (
                 <LectureCard key={index} data={homework} />
+              ))}
+            </View>
+          </View>
+        )}
+        {activeTab === "examination" && (
+          <View>
+            <View className="px-5 mt-6">
+              <TouchableOpacity
+                onPress={() => router.push("/add-exam")}
+                className="bg-[#CCA35E] rounded-full py-3 flex-row items-center justify-center gap-2"
+              >
+                <Plus color="white" size={24} />
+                <Text className="text-white font-semibold text-lg">
+                  Add Examination
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View className="px-5 mt-6 gap-4">
+              {exams?.map((exam: any, index: number) => (
+                <LectureCard key={index} data={exam} />
               ))}
             </View>
           </View>
