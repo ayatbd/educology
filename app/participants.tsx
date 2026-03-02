@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Student, StatusType } from "../components/types/allTypes";
+import { router } from "expo-router";
 
 const studentData: Student[] = Array(8)
   .fill({
@@ -75,7 +76,7 @@ export default function Participate() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="px-4 py-3 flex-row items-center justify-between">
-        <TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={26} color="black" />
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-slate-700">Participate</Text>

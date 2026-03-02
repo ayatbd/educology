@@ -1,10 +1,10 @@
 import { apiSlice } from "./apiSlice";
 
-export const classApi = apiSlice.injectEndpoints({
+const classApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getClasses: builder.query({
-            query: () => "/class/my-classes",
-            providesTags: ["Class"],
+            query: () => "/class/69918b0e5c764119a79a4191",
+            //providesTags: ["Class"],
         }),
         addClass: builder.mutation({
             query: (credentials) => ({

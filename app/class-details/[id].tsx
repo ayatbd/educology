@@ -19,6 +19,7 @@ import {
   MessageSquare,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import { useGetClassesQuery } from "@/redux/api/classApi";
 
 type TabType = "classes" | "examination" | "announcement";
 
@@ -40,9 +41,13 @@ type LectureCardTypes = {
 
 export default function ClassDetailsScreen() {
   const router = useRouter();
+  const { data: classes, isLoading } = useGetClassesQuery(undefined);
+  const lectures = classes?.data || [];
+  // console.log(classes);
 
   const [activeTab, setActiveTab] = useState<TabType>("classes");
 
+  if (isLoading) return <Text>Loading...</Text>;
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -163,7 +168,7 @@ export default function ClassDetailsScreen() {
             </View>
 
             <View className="px-5 mt-6 gap-4">
-              {lectures.map((lecture, index) => (
+              {lectures?.map((lecture: LectureCardTypes, index: number) => (
                 <LectureCard key={index} data={lecture} />
               ))}
             </View>
@@ -236,21 +241,21 @@ const LectureCard = ({ data }: { data: LectureCardTypes }) => (
   </View>
 );
 
-const lectures = [
-  {
-    title: "Lecture-1 (Algebra Part-1)",
-    date: "29 Jan, 2026 | 10:00 AM",
-    instructor: "Rakibul Hasan",
-    instructorImg: "https://i.pravatar.cc/150?u=1",
-    postedDate: "19 Nov, 2026 | 12:00PM",
-    comments: "02",
-  },
-  {
-    title: "Lecture-2 (Algebra Part-2)",
-    date: "02 Feb, 2026 | 10:00 AM",
-    instructor: "Rakibul Hasan",
-    instructorImg: "https://i.pravatar.cc/150?u=1",
-    postedDate: "19 Nov, 2026 | 12:00PM",
-    comments: "05",
-  },
-];
+// const lectures = [
+//   {
+//     title: "Lecture-1 (Algebra Part-1)",
+//     date: "29 Jan, 2026 | 10:00 AM",
+//     instructor: "Rakibul Hasan",
+//     instructorImg: "https://i.pravatar.cc/150?u=1",
+//     postedDate: "19 Nov, 2026 | 12:00PM",
+//     comments: "02",
+//   },
+//   {
+//     title: "Lecture-2 (Algebra Part-2)",
+//     date: "02 Feb, 2026 | 10:00 AM",
+//     instructor: "Rakibul Hasan",
+//     instructorImg: "https://i.pravatar.cc/150?u=1",
+//     postedDate: "19 Nov, 2026 | 12:00PM",
+//     comments: "05",
+//   },
+// ];

@@ -168,7 +168,7 @@ const CourseCard = ({ data }: { data: CourseCardDetails }) => {
 // Dummy Data
 const coursesData = [
   {
-    id: 1,
+    id: "69918b0e5c764119a79a4191",
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
@@ -176,7 +176,7 @@ const coursesData = [
       "https://img.freepik.com/free-photo/kids-learning-school_23-2148858206.jpg",
   },
   {
-    id: 2,
+    id: "69918b0e5c764119a79a4191",
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
@@ -184,7 +184,7 @@ const coursesData = [
       "https://img.freepik.com/free-vector/math-background-with-realistic-elements_1361-1279.jpg",
   },
   {
-    id: 3,
+    id: "69918b0e5c764119a79a4191",
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
@@ -192,7 +192,7 @@ const coursesData = [
       "https://img.freepik.com/free-photo/calculator-with-finance-concept-table_23-2149126209.jpg",
   },
   {
-    id: 4,
+    id: "69918b0e5c764119a79a4191",
     title: "Grade 10 – Mathematics",
     subject: "Mathematics",
     students: 12,
