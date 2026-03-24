@@ -14,7 +14,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 
-// Mock Data
 const ROLES = [
   {
     id: "student",
@@ -51,7 +50,6 @@ export default function Index() {
   const [selectedRole, setSelectedRole] = useState("teacher");
   const dispatch = useDispatch();
 
-  // 3. Handle Navigation on Next Press
   const handleNext = () => {
     // You can pass the role as a parameter if needed
     router.push({
@@ -60,38 +58,9 @@ export default function Index() {
     });
   };
 
-  // const handleLogout = async () => {
-  //   Alert.alert("Log Out", "Are you sure you want to log out?", [
-  //     { text: "Cancel", style: "cancel" },
-  //     {
-  //       text: "Log Out",
-  //       style: "destructive",
-  //       onPress: async () => {
-  //         try {
-  //           await AsyncStorage.removeItem("userToken");
-  //           // await messaging().deleteToken();
-  //           dispatch(logout());
-  //           router.replace("/login");
-  //         } catch (error) {
-  //           console.error("Logout failed", error);
-  //         }
-  //       },
-  //     },
-  //   ]);
-  // };
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
-
-      {/* <TouchableOpacity
-        onPress={handleLogout}
-        className="flex-row items-center justify-center w-48 mt-14 bg-red-50 p-4 rounded-2xl border border-red-100"
-      >
-        <LogOut size={20} color="#EF4444" style={{ marginRight: 10 }} />
-        <Text className="text-red-500 font-bold text-lg">Log Out</Text>
-      </TouchableOpacity> */}
-
       <ScrollView
         className="flex-1 px-6"
         showsVerticalScrollIndicator={false}
@@ -175,13 +144,6 @@ export default function Index() {
         >
           <Text className="text-white text-xl font-bold">Next</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={() => router.push("/main")} // 5. Added navigation handler here
-          className="mt-10 bg-[#C59D5F] py-4 rounded-3xl items-center shadow-lg shadow-orange-100"
-          activeOpacity={0.9}
-        >
-          <Text className="text-white text-xl font-bold">Go to Homepage</Text>
-        </TouchableOpacity> */}
       </ScrollView>
     </SafeAreaView>
   );
