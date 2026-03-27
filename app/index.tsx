@@ -1,7 +1,4 @@
-import { logout } from "@/redux/features/auth/authSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { LogOut } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Image,

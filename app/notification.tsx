@@ -1,4 +1,3 @@
-import React from "react";
 import {
   View,
   Text,
@@ -9,7 +8,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowLeft, BellRing } from "lucide-react-native";
-import { useGetNotificationsQuery } from "@/redux/api/notificationApi";
+import { useGetNotificationsQuery } from "../redux/api/notificationApi";
 
 // 1. Define the Type
 interface Notification {
@@ -19,50 +18,6 @@ interface Notification {
   time: string;
   isUnread?: boolean;
 }
-
-// 2. Mock Data
-// const notifications: Notification[] = [
-//   {
-//     id: "1",
-//     title: "New Homework Submission",
-//     description: '3 students submitted homework for "Grade 10 – Mathematics"',
-//     time: "16 minutes ago",
-//     isUnread: true,
-//   },
-//   {
-//     id: "2",
-//     title: "Exam Submissions Received",
-//     description: "Answer sheets for the Midterm Exam are ready for review.",
-//     time: "16 minutes ago",
-//   },
-//   {
-//     id: "3",
-//     title: "Lesson Recording Uploaded",
-//     description: 'A new lesson recording has been added to "Algebra Basics".',
-//     time: "16 minutes ago",
-//   },
-//   {
-//     id: "4",
-//     title: "New Announcement Published",
-//     description:
-//       "Your announcement has been successfully shared with students.",
-//     time: "16 minutes ago",
-//   },
-//   {
-//     id: "5",
-//     title: "New Announcement Published",
-//     description:
-//       "Your announcement has been successfully shared with students.",
-//     time: "16 minutes ago",
-//   },
-//   {
-//     id: "6",
-//     title: "New Announcement Published",
-//     description:
-//       "Your announcement has been successfully shared with students.",
-//     time: "16 minutes ago",
-//   },
-// ];
 
 export default function NotificationScreen() {
   const router = useRouter();

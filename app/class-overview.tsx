@@ -96,6 +96,14 @@ const students = [
     statusColor: "text-yellow-500",
     dotColor: "bg-yellow-500",
   },
+  {
+    id: 7,
+    name: "Rakibul Hasan",
+    phone: "+8801827347685",
+    status: "Attention",
+    statusColor: "text-yellow-500",
+    dotColor: "bg-yellow-500",
+  },
 ];
 
 export default function ClassOverview() {
