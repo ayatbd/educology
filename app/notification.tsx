@@ -38,7 +38,7 @@ export default function NotificationScreen() {
           <ArrowLeft size={28} color="#1e293b" />
         </TouchableOpacity>
 
-        <Text className="text-2xl font-bold text-slate-700">Notification</Text>
+        <Text className="text-2xl font-bold text-slate-700">Notifications</Text>
 
         <View className="w-10" />
       </View>
@@ -54,12 +54,10 @@ export default function NotificationScreen() {
             <View className="mt-1">
               <View className="relative">
                 <BellRing size={24} color="#334155" strokeWidth={2.5} />
-                {/* Optional notification dot if needed */}
                 <View className="absolute top-0 right-0 w-2 h-2 bg-slate-700 rounded-full border border-white" />
               </View>
             </View>
 
-            {/* Text Content */}
             <View className="flex-1 ml-4">
               <Text className="text-lg font-bold text-slate-800 leading-tight">
                 {item?.title}
